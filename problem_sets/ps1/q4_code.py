@@ -21,7 +21,7 @@ def compare_interp(func,func_name,xmin,xmax,n,m):
     plt.ion()
     plt.clf()
     plt.plot(xx,func(xx))
-    plt.savefig(func_name + "_original.png")
+    plt.savefig("_q4_graphs_" + func_name + "_original.png")
 
     #polynomial
     yy = np.zeros(len(xx))
@@ -37,7 +37,7 @@ def compare_interp(func,func_name,xmin,xmax,n,m):
 
     plt.clf()
     plt.plot(xx,yy)
-    plt.savefig(func_name + "_poly_ord" + str(n+m-1) + ".png")
+    plt.savefig("_q4_graphs_" + func_name + "_poly_ord" + str(n+m-1) + ".png")
 
     print(func_name + "_poly_order" + str(n+m-1) + "_error:" + str(integrate.simpson(np.abs(yy - func(xx)),xx)))
 
@@ -47,7 +47,7 @@ def compare_interp(func,func_name,xmin,xmax,n,m):
 
     plt.clf()
     plt.plot(xx,yy)
-    plt.savefig(func_name + "_spline.png")
+    plt.savefig("_q4_graphs_" + func_name + "_spline.png")
 
     print(func_name + "_spline_error:" + str(integrate.simpson(np.abs(yy - func(xx)),xx)))
 
@@ -67,7 +67,7 @@ def compare_interp(func,func_name,xmin,xmax,n,m):
 
     plt.clf()
     plt.plot(xx,yy)
-    plt.savefig(func_name + "_rational_n" + str(n) + "m" + str(m) + ".png")
+    plt.savefig("_q4_graphs_" + func_name + "_rational_n" + str(n) + "m" + str(m) + ".png")
 
     print(func_name + "_rational_n" + str(n) + "m" + str(m) + "_p:" + str(p))
     print(func_name + "_rational_n" + str(n) + "m" + str(m) + "_q:" + str(q))
@@ -81,7 +81,7 @@ def compare_interp(func,func_name,xmin,xmax,n,m):
 
     plt.clf()
     plt.plot(xx,yy)
-    plt.savefig(func_name + "_rational2_n" + str(n) + "m" + str(m) + ".png")
+    plt.savefig("_q4_graphs_" + func_name + "_rational2_n" + str(n) + "m" + str(m) + ".png")
 
     print(func_name + "_rational2_n" + str(n) + "m" + str(m) + "_p:" + str(p))
     print(func_name + "_rational2_n" + str(n) + "m" + str(m) + "_q:" + str(q))

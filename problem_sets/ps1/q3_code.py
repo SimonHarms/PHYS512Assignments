@@ -2,7 +2,7 @@ import numpy as np
 from scipy import interpolate
 
 def lakeshore(V,data):
-    if len(data) > 3:
+    if len(data) > 3: #transpose the data if it's the wrong way around
         data = np.transpose(data)
     x = data[0]
     y = data[1]
