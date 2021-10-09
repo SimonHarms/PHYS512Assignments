@@ -44,4 +44,4 @@ for i in range(1,nptd):
 plt.plot(x,np.abs(y - real_y(x)),label = "rk4")
 plt.plot(xd,np.abs(yd-real_y(xd)), label = "rk4d")
 plt.legend()
-plt.show()
+plt.savefig("residue comparison.png")

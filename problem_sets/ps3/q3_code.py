@@ -22,8 +22,10 @@ y0 = -param[2,0]/(2*a)
 z0 = param[3,0] - a * (x0**2 + y0**2)
 print("a: ", a, ", x0: ", x0, ", y0: ", y0, ", z0: ", z0)
 err_mat = d - A*param
-var_estimate = ((err_mat.transpose()*err_mat)/(ndata - 4))[0,0]
+var_estimate = ((err_mat.transpose()*err_mat)/(ndata - 4))[0,0] #the denominator is the number of data points minus the degrees of freedom
+print("noise estimate: ", var_estimate) #noise estimate based on the variance of the data points around the model
 coeff_variance = var_estimate * np.linalg.pinv(lhs)
-a_err = coeff_variance[0,0]
+a_err = np.sqrt(coeff_variance[0,0])
 print("error in a: ", a_err)
-print("Focal length is ", 1/(4*a), ", with error: ", (1/(2*a**2))**2 * a_err)
+#err_fl = |dfl/da| * err_a = 1/(2*a^2) * a_err
+print("Focal length is ", 1/(4*a), ", with error: ", (1/(2*a**2)) * a_err)
