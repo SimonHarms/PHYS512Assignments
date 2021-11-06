@@ -7,6 +7,7 @@ from numpy.fft import fft, ifft, rfft, irfft
 
 directory = "LOSC_Event_tutorial/"
 
+#I copy pasted the read code from simple_read_ligo.py because trying to import it ran that file which gave an error since hdf5 files aren't where it expects them to be
 def read_template(filename):
     dataFile=h5py.File(filename,'r')
     template=dataFile['template']
@@ -34,7 +35,8 @@ def read_file(filename):
     return strain,dt,utc
 
 
-
+#I looked at the plots for the raw data and it seemed like the noise was white
+#So I'm calculating the noise here for both Hanford and Livingston on the assumption that the noise is white
 def noise_ft(strain):
     strain_ft = rfft((strain) * sig.tukey(len(strain))) #I'm using the tukey window a = 0.5 because it has a flat plateau in the middle 
     ps = strain_ft**2 #take the power spectrum of the strain
@@ -44,16 +46,10 @@ def noise_ft(strain):
     old_mean = np.mean(Nft)
     for i in range(100):
         Nft = np.abs(irfft(rfft(Nft) * rfft(gauss)))
-        Nft = Nft * old_mean / np.mean(Nft)
+        Nft = Nft * old_mean / np.mean(Nft) #I rescale using the previous mean because otherwise the Nft balloons after all these smoothing steps
         old_mean = np.mean(Nft)
-        #Nft = (Nft+np.roll(Nft,1)+np.roll(Nft,-1))/3
-    Nft = np.append(Nft,[(Nft[-1] + Nft[0]) / 2])
-    #plt.plot(ps)
+    Nft = np.append(Nft,[(Nft[-1] + Nft[0]) / 2]) #I had to add an extra entry to the Nft because the last step removes one
     return Nft
-
-#plt.plot(ifft(fft(strain1) / np.sqrt(noise_ft(strain1))))
-#plt.plot(ifft(fft(tl) / np.sqrt(noise_ft(strain2))))
-#plt.plot(noise_ft(strain1))
 
 def matched_filter(strain, template):
     nft = noise_ft(strain)
@@ -63,15 +59,13 @@ def matched_filter(strain, template):
     tft_white = tft / np.sqrt(nft)
     return irfft(sft_white * np.conj(tft_white))
 
-#plt.plot(matched_filter(strain2,tl))
-#plt.plot(sig.windows.hann(len(strain1)))
 
 def get_event_signal(mf):
     maxval = np.amax(mf)
-    return np.where(mf == maxval)[0][0], np.abs(maxval)
+    return np.where(mf == maxval)[0][0], maxval**2
 
 def get_event_noise(mf):
-    return np.mean(np.abs(mf))
+    return np.mean(mf**2)
 
 def analyze_event(event_name, hfile, lfile, template):
     strainh,dth,utch = read_file(directory + hfile)
@@ -84,15 +78,28 @@ def analyze_event(event_name, hfile, lfile, template):
 
     timeh, signalh = get_event_signal(mfh)
     noiseh = get_event_noise(mfh)
-    print(event_name + " at Hanford: ", timeh * dth, " SNR: ", signalh / noiseh)
+    snrh = signalh / noiseh
+    print(event_name + " at Hanford: ", timeh * dth, " SNR: ", snrh)
     timel, signall = get_event_signal(mfl)
     noisel = get_event_noise(mfl)
-    print(event_name + " at Livingston: ", timel * dtl, " SNR: ", signall / noisel)
+    snrl = signall / noisel
+    print(event_name + " at Livingston: ", timel * dtl, " SNR: ", snrl)
+    print(event_name + " average: ", (timeh * dth * snrh + timel * dtl * snrl)/ (snrh + snrl), " SNR: ", ((snrh)**2 + (snrl)**2)/ (snrh + snrl))
+    
 
     plt.clf()
-    plt.plot(mfh)
-    plt.plot(mfl)
-    plt.savefig(event_name + ".png")
+    plt.plot(range(len(mfh)) * dth, mfh, label = "signal time = " + str(timeh * dth))
+    plt.title("MF signal for " + event_name + " at Hanford")
+    plt.legend()
+    plt.xlabel("time")
+    plt.savefig(event_name + "_Hanford.png")
+
+    plt.clf()
+    plt.plot(range(len(mfl)) * dtl, mfl, label = "signal time = " + str(timel * dtl))
+    plt.title("MF signal for " + event_name + " at Livingston")
+    plt.legend()
+    plt.xlabel("time")
+    plt.savefig(event_name + "_Livingston.png")
 
 analyze_event("GW150914","H-H1_LOSC_4_V2-1126259446-32.hdf5","L-L1_LOSC_4_V2-1126259446-32.hdf5","GW150914_4_template.hdf5")
 analyze_event("LVT151012","H-H1_LOSC_4_V2-1128678884-32.hdf5","L-L1_LOSC_4_V2-1128678884-32.hdf5","LVT151012_4_template.hdf5")
