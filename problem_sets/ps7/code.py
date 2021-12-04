@@ -21,6 +21,7 @@ n = 200
 mid = n // 2
 V = np.zeros([n, n])
 V[mid, mid] = 1
+#expected charge distribution
 p = np.zeros([n, n])
 p[0,0] = 1
 
@@ -44,9 +45,6 @@ print("V[1,0] =", G[1,0])
 print("V[2,0] =", G[2,0])
 print("V[5,0] =", G[5,0])
 
-#G -= np.amin(G)
-#print(np.amin(G))
-
 def convolute(x,mask):
     tmp = 0*x
     tmp[mask] = x[mask]
@@ -55,7 +53,7 @@ def convolute(x,mask):
     return ret
 
 def conjgrad(x,b,mask,niter=20,fun=convolute):
-    #r=A@x-b
+    #conjugate gradient method from the notes
     r=b-fun(x,mask)
     p=r
     rr=np.sum(r*r)
