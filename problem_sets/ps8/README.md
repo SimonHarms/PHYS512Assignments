@@ -1,0 +1,3 @@
+This folder has the exact same contents as ps7 (which I handed in before the due date, you can check the git commits) except for this readme. I only put this folder here because I found out that problem set 7 was assigned in an email and what I thought was ps7 was actually problem set 8 and I'm very confused and so I'm just putting this folder here in case you're looking for a folder called problem set 8 and at this point I just want to cover all my bases and make sure I get credit for the work I did do (I'm a little shaken up by finding out there was a problem set I missed).
+
+Feel free to ignore this folder, I mainly made it because I'm a little stressed and panicky and I wanted to make sure I wasn't missing anything.

@@ -1,0 +1,9 @@
+Initially the inferred charge is:  1.3834308218158151
+After 1 iterations the inferred charge is:  1.4675977093881434
+After 2 iterations the inferred charge is:  0.8039013441851427
+After 3 iterations the inferred charge is:  0.26885123444775355
+After 4 iterations the inferred charge is:  0.028255915403791385
+After 5 iterations the inferred charge is:  0.0003277904340505885
+V[1,0] = 2.5132772702551875e-05
+V[2,0] = -0.4534208634053898
+V[5,0] = -1.0509839282389368
